@@ -32,13 +32,12 @@
 <script>
     $(function() {
         var info = {};
-        $(window).keyup(function() {
+
+        var setActiveToInfo = function() {
             var active;
 
             // all browsers, except IE before version 9
             if (window.getSelection) {
-
-
 
                 // 可以用 activeElement 來取得當前被 focus 的 DOM 物件
                 active = document.activeElement;
@@ -47,8 +46,6 @@
                     info.selText = text.substring(active.selectionStart, active.selectionEnd);
                     info.selectionStart = active.selectionStart;
                     info.selectionEnd = active.selectionEnd;
-
-
 
                 } else {
                     // 或直接取得 selection 物件
@@ -67,6 +64,11 @@
             $('#selectStart').text(info.selectionStart);
             $('#selectEnd').text(info.selectionEnd);
             $('#sourceCode').text(info.sourceCode);
+        };
+
+        $(window).on({
+            keyup: setActiveToInfo,
+            mouseup: setActiveToInfo
         });
 
         $('#setBold').click(function() {
