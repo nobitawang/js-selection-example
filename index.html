@@ -13,7 +13,16 @@
 </head>
 <body>
 <form name="testForm">
-    <div contenteditable="true" class="test-area" name="testArea" id="testArea"><img src="image/0001.png" width="100"></div>
+    <div contenteditable="true" class="test-area" name="testArea" id="testArea">
+        <img src="http://user.mgmt.pixnet/~nobita/js-selection-example/image/0001.png" width="100">
+        aaa
+        <img src="http://user.mgmt.pixnet/~nobita/js-selection-example/image/0001.png" width="100">
+        aaa
+        <img src="http://user.mgmt.pixnet/~nobita/js-selection-example/image/0001.png" width="100">
+        aaa
+        <img src="http://user.mgmt.pixnet/~nobita/js-selection-example/image/0001.png" width="100">
+        aaa
+    </div>
     <button type="button" id="setBold">bold</button>
     <p>
         select text: <span id="selectText"></span><br/>
@@ -34,36 +43,13 @@
         var info = {};
 
         var setActiveToInfo = function() {
-            var active;
+            var range = document.createRange();
+            var selection = window.getSelection();
+            var startNode = selection.anchorNode.anchorNode;
 
-            // all browsers, except IE before version 9
-            if (window.getSelection) {
-
-                // 可以用 activeElement 來取得當前被 focus 的 DOM 物件
-                active = document.activeElement;
-                if (active && (active.tagName.toLowerCase() === 'textarea' || active.tagName.toLowerCase() === 'input')) {
-                    var text = active.value;
-                    info.selText = text.substring(active.selectionStart, active.selectionEnd);
-                    info.selectionStart = active.selectionStart;
-                    info.selectionEnd = active.selectionEnd;
-
-                } else {
-                    // 或直接取得 selection 物件
-                    var selRange = window.getSelection();
-                    info.selText = selRange.toString();
-                }
-            } else {
-                if (document.selection.createRange) {       // Internet Explorer
-                    var range = document.selection.createRange ();
-                    info.selText = range.text;
-                }
-            }
-
-            info.sourceCode = active.value;
-            $('#selectText').text(info.selText);
-            $('#selectStart').text(info.selectionStart);
-            $('#selectEnd').text(info.selectionEnd);
-            $('#sourceCode').text(info.sourceCode);
+            console.clear();
+            console.log(selection);
+            console.log(selection.getRangeAt(0));
         };
 
         $(window).on({
@@ -87,3 +73,4 @@
 </script>
 </body>
 </html>
+
