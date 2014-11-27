@@ -14,23 +14,18 @@
 <body>
 <form name="testForm">
     <div contenteditable="true" class="test-area" name="testArea" id="testArea">
-        <img src="http://user.mgmt.pixnet/~nobita/js-selection-example/image/0001.png" width="100">
+        <img src="image/0001.png" width="100">
         aaa
-        <img src="http://user.mgmt.pixnet/~nobita/js-selection-example/image/0001.png" width="100">
+        <img src="image/0001.png" width="100">
         aaa
-        <img src="http://user.mgmt.pixnet/~nobita/js-selection-example/image/0001.png" width="100">
+        <img src="image/0001.png" width="100">
         aaa
-        <img src="http://user.mgmt.pixnet/~nobita/js-selection-example/image/0001.png" width="100">
+        <img src="image/0001.png" width="100">
         aaa
     </div>
     <button type="button" id="setBold">bold</button>
     <p>
-        select text: <span id="selectText"></span><br/>
-        selectStart: <span id="selectStart"></span><br/>
-        selectEnd:   <span id="selectEnd"></span><br/>
-    </p>
-    <p>
-        textarea content html : <span id="sourceCode"></span>
+        select text: <textarea class="test-area" id="selectText"></textarea><br/>
     </p>
 
     <hr/>
@@ -40,16 +35,27 @@
 </form>
 <script>
     $(function() {
-        var info = {};
+        var info = {},
+            $container;
 
-        var setActiveToInfo = function() {
-            var range = document.createRange();
-            var selection = window.getSelection();
-            var startNode = selection.anchorNode.anchorNode;
 
-            console.clear();
-            console.log(selection);
-            console.log(selection.getRangeAt(0));
+        var setActiveToInfo = function(event) {
+            // 確定是在我們的編輯器中動作才進入，不是的話則避開
+
+
+            if ('BUTTON' !== $(event.target)[0].tagName) {
+                var selection = window.getSelection();
+
+                $container = $('<div/>');
+                for (var i = 0, len = selection.rangeCount; i < len; i++) {
+                    $container.append(selection.getRangeAt(i).cloneContents());
+                }
+                console.clear();
+                console.log($container.html());
+                console.log(selection);
+
+                $('#selectText').val($container.html());
+            }
         };
 
         $(window).on({
@@ -58,16 +64,11 @@
         });
 
         $('#setBold').click(function() {
-            var allText = $('#testArea')[0].value,
-                newText,
-                tmpArr = [];
+//            $container.css('font-size', 'bold');
+            var selText = $container.html();
+            var editText = $('#testArea').html();
 
-            tmpArr.push(allText.substr(0, info.selectionStart));
-            tmpArr.push(allText.substr(info.selectionStart, info.selectionEnd));
-            tmpArr.push(allText.substr(info.selectionStart));
-            console.log(tmpArr);
-
-//            $('#testArea').html()
+            console.log(editText.indexOf(selText));
         });
     });
 </script>
