@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-TW">
+    <meta charset="UTF-8">
+    <title>js selection example</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <style>
+        .test-area {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<form name="testForm">
+    <textarea class="test-area" name="testArea" id="testArea"></textarea>
+    <button type="button" id="setBold">bold</button>
+    <p>
+        select text: <span id="selectText"></span><br/>
+        selectStart: <span id="selectStart"></span><br/>
+        selectEnd:   <span id="selectEnd"></span><br/>
+    </p>
+    <p>
+        textarea content html : <span id="sourceCode"></span>
+    </p>
+
+    <hr/>
+    <p>
+        其他直接設定字串樣式的 native method : <a href="http://www.w3school.com.cn/tiy/t.asp?f=jseg_str_style">http://www.w3school.com.cn/tiy/t.asp?f=jseg_str_style</a>
+    </p>
+</form>
+<script>
+    $(function() {
+        var info = {};
+        $(window).keyup(function() {
+            var active;
+
+            // all browsers, except IE before version 9
+            if (window.getSelection) {
+
+
+
+                // 可以用 activeElement 來取得當前被 focus 的 DOM 物件
+                active = document.activeElement;
+                if (active && (active.tagName.toLowerCase() === 'textarea' || active.tagName.toLowerCase() === 'input')) {
+                    var text = active.value;
+                    info.selText = text.substring(active.selectionStart, active.selectionEnd);
+                    info.selectionStart = active.selectionStart;
+                    info.selectionEnd = active.selectionEnd;
+
+
+
+                } else {
+                    // 或直接取得 selection 物件
+                    var selRange = window.getSelection();
+                    info.selText = selRange.toString();
+                }
+            } else {
+                if (document.selection.createRange) {       // Internet Explorer
+                    var range = document.selection.createRange ();
+                    info.selText = range.text;
+                }
+            }
+
+            info.sourceCode = active.value;
+            $('#selectText').text(info.selText);
+            $('#selectStart').text(info.selectionStart);
+            $('#selectEnd').text(info.selectionEnd);
+            $('#sourceCode').text(info.sourceCode);
+        });
+
+        $('#setBold').click(function() {
+            var allText = $('#testArea')[0].value,
+                newText,
+                tmpArr = [];
+
+            tmpArr.push(allText.substr(0, info.selectionStart));
+            tmpArr.push(allText.substr(info.selectionStart, info.selectionEnd));
+            tmpArr.push(allText.substr(info.selectionStart));
+            console.log(tmpArr);
+
+//            $('#testArea').html()
+        });
+    });
+</script>
+</body>
+</html>
